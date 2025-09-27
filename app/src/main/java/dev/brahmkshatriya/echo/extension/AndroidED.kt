@@ -58,13 +58,14 @@ class AndroidED : EDExtension() {
     ): File {
         val file = getDownloadDir(context)
         return when (source) {
-            is Streamable.Source.ByteStream -> {
+            is Streamable.Source.Raw -> {
                 val preFile = File(file.parent, "${source.hashCode()}.mp3")
+                val (stream, totalBytes) = source.streamProvider.provide(0, -1)
                 inputStreamDownload.inputStreamDownload(
                     preFile,
                     progressFlow,
-                    source.stream,
-                    source.totalBytes
+                    stream,
+                    totalBytes
                 )
             }
 
